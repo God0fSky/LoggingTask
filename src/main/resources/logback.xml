@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+    <include resource="org/springframework/boot/logging/logback/default.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <appender name="CONSOLE_LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{DD-MM-YYYY HH:mm:ss.SSS} | My console log | %-2.10thread | %2p | %.36logger{36} | %X{clientName} | %d{date} | %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <property name="LOG_DIR" value="./logs/orderLogs" />
+    <appender name="FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_DIR}/order.%d{yyyy-MM-dd-HH-mm}.%i.log</fileNamePattern>
+        <maxHistory>10</maxHistory>
+        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <maxFileSize>1KB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+
+    <encoder>
+        <pattern>%d{DD-MM-YYYY HH:mm:ss.SSS} |My file log| %-2.10thread | %2p | %-15.36logger{36} | %X{clientName}| %d{date} %m%n</pattern>
+    </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_LOG" />
+        <appender-ref ref="FILE_LOG" />
+    </root>
+
+    <logger name="org.springframework.web" level="INFO"/>
+
+</configuration>
